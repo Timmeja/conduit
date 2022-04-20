@@ -1,0 +1,14 @@
+Regisztráció: A felületen felhasználónév, email cím és jelszó megadásával regisztrálhatunk fiókot.
+Bejelentkezés: A megfelelő email cím és jelszó megadásával beléphetünk az oldalra.
+Kijelentkezés: A Log out gombra kattintva kilépünk a felhasználói fiókunkból.
+"conduit"/Home funkció: A bal felső sarokban lévő "conduit" feliratra vagy a jobb oldalon elhelyezkedő menüpont "Home" feliratára kattintva a kezdőoldalra navigálunk.
+"New Article" funkció: A jobb oldali menüsor "New Article" menüpontjára kattintva új bejegyzést hozhatunk létre.
+Profilkép megadása funkció: A "Settings" menüpontban képesek vagyunk a felhasználónkhoz profilképet megadni.
+Username változtatása funkció: A "Settings" menüpontban képesek vagyunk Username változtatásra.
+Bemutatkozás megadása funkció: A "Settings" menüpontban képesek vagyunk leírást megadni a felhasználóhoz.
+Jelszóváltoztatás funkció: A "Settings" menüpontban képesek vagyunk megváltoztatni a jelszavunkat.
+Cookie-kezelés funkció: Lehetőségünk van elfogadni/elutasítani az oldal sütikezelését.
+Kedvencek-funkció: Lehetőségünk van kedvelni egy-egy cikket az oldalon.
+Lapozás az oldalon funkció: Laopzó segítségével tudunk navigálni a cikkeket felsoroló oldalak között.
+Tagek használata: Lehetőségünk van a cikkekhez címkéket rendelni.
+Szűrés funkció: Lehetőségünk van szűrni a népszerű címkékre, vagy a kedvelt cikkekre.
