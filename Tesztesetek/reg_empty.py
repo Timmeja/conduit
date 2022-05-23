@@ -1,15 +1,18 @@
 from selenium import webdriver
-from webdriver_manager.chrome import ChromeDriverManager
-from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
+from webdriver_manager.chrome import ChromeDriverManager
+
+from def_list import cookie_accept
 
 browser = webdriver.Chrome(ChromeDriverManager().install())
 URL = 'http://localhost:1667/#/'
 browser.get(URL)
 browser.maximize_window()
 
+cookie_accept(browser)
 registration_link = browser.find_element_by_xpath('//a[@href="#/register"]')
 registration_link.click()
 reg_username_input = browser.find_element_by_xpath('//input[@placeholder="Username"]')

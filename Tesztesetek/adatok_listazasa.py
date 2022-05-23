@@ -1,5 +1,7 @@
+import time
 from selenium import webdriver
 from webdriver_manager.chrome import ChromeDriverManager
+from def_list import cookie_accept
 
 browser = webdriver.Chrome(ChromeDriverManager().install())
 browser.implicitly_wait(10)
@@ -7,6 +9,8 @@ URL = 'http://localhost:1667/#/'
 browser.get(URL)
 browser.maximize_window()
 
+time.sleep(1)
+cookie_accept(browser)
 tag_list = browser.find_elements_by_xpath('//a[@class="tag-pill tag-default"]')
 active_tag = browser.find_element_by_xpath('//a[@class="nav-link router-link-exact-active active"]')
 active_link = browser.current_url
