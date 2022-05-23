@@ -5,25 +5,7 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
-
-
-def cookie_accept(b):
-    cookie_panel = WebDriverWait(b, 5).until(
-        EC.presence_of_all_elements_located((By.XPATH, '//div[@class="cookie cookie__bar cookie__bar--bottom-left"]')))
-    cookie_accept = b.find_element_by_xpath(
-        '//button[@class="cookie__bar__buttons__button cookie__bar__buttons__button--accept"]')
-    cookie_accept.click()
-
-
-def login(b):
-    login_link = b.find_element_by_xpath('//a[@href="#/login"]')
-    login_link.click()
-    login_email_input = b.find_element_by_xpath('//input[@placeholder="Email"]')
-    login_email_input.send_keys('teszt@holtpont.eu')
-    login_password_input = b.find_element_by_xpath('//input[@placeholder="Password"]')
-    login_password_input.send_keys('@B1aB1@B1')
-    login_btn = b.find_element_by_xpath('//button[@class="btn btn-lg btn-primary pull-xs-right"]')
-    login_btn.click()
+from def_list import cookie_accept, login
 
 
 class TestConduit(object):
@@ -35,6 +17,7 @@ class TestConduit(object):
         self.browser.maximize_window()
 
     def test_cookie_accept(self):
+        time.sleep(2)
         cookie_panel = WebDriverWait(self.browser, 5).until(
             EC.presence_of_all_elements_located(
                 (By.XPATH, '//div[@class="cookie cookie__bar cookie__bar--bottom-left"]')))
@@ -213,7 +196,8 @@ class TestConduit(object):
             time.sleep(1)
             edit_btn = self.browser.find_element_by_xpath('//*[@id="app"]/div/div[1]/div/div/span/a/span')
             edit_btn.click()
-            with open('az_olvasasrol.txt', 'r', encoding='UTF-8') as article_content_file:
+            time.sleep(2)
+            with open('test/az_olvasasrol.txt', 'r', encoding='UTF-8') as article_content_file:
                 article_content_string = article_content_file.read()
             time.sleep(2)
             article_content = WebDriverWait(self.browser, 5).until(
@@ -288,8 +272,8 @@ class TestConduit(object):
         login(self.browser)
         settings_link = self.browser.find_element_by_xpath('//a[@href="#/settings"]')
         settings_link.click()
-
-        with open('profilkepek.txt', 'r', encoding='UTF-8') as profile_pictures_list:
+        time.sleep(2)
+        with open('test/profilkepek.txt', 'r', encoding='UTF-8') as profile_pictures_list:
             list_content = profile_pictures_list.read().split('\n')
         # print(len(list_content))
 
