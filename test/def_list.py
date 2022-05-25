@@ -2,6 +2,8 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 
+# Függvények a test_conduit.py fájlhoz.
+
 def cookie_accept(b):
     cookie_panel = WebDriverWait(b, 5).until(
         EC.presence_of_all_elements_located((By.XPATH, '//div[@class="cookie cookie__bar cookie__bar--bottom-left"]')))
