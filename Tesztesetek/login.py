@@ -12,9 +12,9 @@ browser.get(URL)
 browser.maximize_window()
 
 cookie_accept(browser)
-login(browser)
 homepage_links = browser.find_elements_by_xpath('//li[@class="nav-item"]')
-time.sleep(2)
+login(browser)
+time.sleep(1)
 profile_links = WebDriverWait(browser, 5).until(
     EC.presence_of_all_elements_located((By.XPATH, '//li[@class="nav-item"]')))
 print(len(homepage_links))
