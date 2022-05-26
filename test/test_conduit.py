@@ -1,12 +1,10 @@
 import time
-
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 from webdriver_manager.chrome import ChromeDriverManager
-
 from def_list import cookie_accept, login
 from dict_list import *
 
@@ -39,7 +37,7 @@ class TestConduit(object):
 
     # Címkék listájának bejárása nem regisztrált felhasználóval (nem láthatja a cikkeket).
     # Címke megjelenésének asszertálása az aktuális url-ben.
-    def test_data_list(self):
+    def test_make_data_list(self):
         time.sleep(1)
         cookie_accept(self.browser)
         tag_list = self.browser.find_elements_by_xpath('//a[@class="tag-pill tag-default"]')

@@ -1,7 +1,7 @@
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
-
+from dict_list import *
 # Függvények a test_conduit.py fájlhoz.
 
 def cookie_accept(b):
@@ -16,8 +16,8 @@ def login(b):
     login_link = b.find_element_by_xpath('//a[@href="#/login"]')
     login_link.click()
     login_email_input = b.find_element_by_xpath('//input[@placeholder="Email"]')
-    login_email_input.send_keys('teszt@holtpont.eu')
+    login_email_input.send_keys(login_dict['user'])
     login_password_input = b.find_element_by_xpath('//input[@placeholder="Password"]')
-    login_password_input.send_keys('@B1aB1@B1')
+    login_password_input.send_keys(login_dict['password'])
     login_btn = b.find_element_by_xpath('//button[@class="btn btn-lg btn-primary pull-xs-right"]')
     login_btn.click()
