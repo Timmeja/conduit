@@ -6,7 +6,7 @@ user_reg_dict = {
     'Password': '@B1aB1@B1'}
 
 login_dict = {
-    'user': 'test@holtpont.eu',
+    'user': 'teszt@holtpont.eu',
     'password': '@B1aB1@B1'
 }
 

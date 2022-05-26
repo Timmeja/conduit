@@ -1,10 +1,12 @@
 import time
+
 from selenium import webdriver
-from webdriver_manager.chrome import ChromeDriverManager
-from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
+from webdriver_manager.chrome import ChromeDriverManager
+
 from def_list import cookie_accept, login
 from dict_list import *
 
@@ -76,6 +78,36 @@ class TestConduit(object):
         print('Teljesült az elvárt eredmény: az adatok nélküli regisztráció elbukik!')
         reg_failed_btn = self.browser.find_element_by_xpath('//button[@class="swal-button swal-button--confirm"]')
         reg_failed_btn.click()
+
+    # Valid regisztráció létrehozása a teszteléshez. Az adatokat külső dictionary-ben adtam meg.
+    def test_user_reg_valid(self):
+        cookie_accept(self.browser)
+        registration_link = self.browser.find_element_by_xpath('//a[@href="#/register"]')
+        registration_link.click()
+        reg_username_input = self.browser.find_element_by_xpath('//input[@placeholder="Username"]')
+        reg_email_input = self.browser.find_element_by_xpath('//input[@placeholder="Email"]')
+        reg_password_input = self.browser.find_element_by_xpath('//input[@placeholder="Password"]')
+        reg_btn = self.browser.find_element_by_xpath('//button[@class="btn btn-lg btn-primary pull-xs-right"]')
+        reg_username_input.send_keys(user_reg_dict['Username'])
+        reg_email_input.send_keys(user_reg_dict['Email'])
+        reg_password_input.send_keys(user_reg_dict['Password'])
+        reg_btn.click()
+        print(user_reg_dict['Email'])
+        # Szükséges a time.sleep használata, mert az üzenet szövege megváltozik a feltűnése után ("Now waiting..."),
+        # és nekünk a végleges üzenet szövegére van szükségünk.
+        time.sleep(2)
+        reg_msg = WebDriverWait(self.browser, 5).until(
+            EC.presence_of_element_located((By.XPATH, '//div[@class="swal-text"]'))).text
+        print(reg_msg)
+        # A többszöri indításhoz if-else ágban lekezeltem a "Foglalt email" hibaüzenetet.
+        try:
+            if reg_msg == 'Your registration was successful!':
+                print('A regisztráció sikeres')
+            elif reg_msg == 'Email already taken.':
+                print(
+                    'Az email címet már regisztráltuk, megkezdheti a bejelentkezési folyamatot a megadott tesztadatokkal!')
+        except AssertionError:
+            print('Hiba a regisztráció során')
 
     # Bejelentkezés előre regisztrált felhasználóval.
     # A főoldal és a bejelentkezés utáni főoldal menüpontmennyiségének asszertálása.
@@ -217,8 +249,9 @@ class TestConduit(object):
             edit_btn = self.browser.find_element_by_xpath('//*[@id="app"]/div/div[1]/div/div/span/a/span')
             edit_btn.click()
             time.sleep(2)
-            # Ha nem találja a fájlt, akkor a 'test/az_olvasasrol.txt'-vel működött újra.
-            with open('az_olvasasrol.txt', 'r', encoding='UTF-8') as article_content_file:
+            # Ha nem találja a fájlt (NoSuchElementException: no such element), akkor a  terminálból a
+            # python -m pytest --alluredir=./allure_report paranccsal való futtatás megoldotta a problémát.
+            with open('test/az_olvasasrol.txt', 'r', encoding='UTF-8') as article_content_file:
                 article_content_string = article_content_file.read()
             time.sleep(2)
             article_content = WebDriverWait(self.browser, 5).until(
@@ -304,8 +337,9 @@ class TestConduit(object):
         settings_link.click()
         time.sleep(2)
         # Külső txt fájl beolvasása.
-        # Ha nem találja a fájlt, akkor a 'test/profilkepek.txt'-vel működött újra.
-        with open('profilkepek.txt', 'r', encoding='UTF-8') as profile_pictures_list:
+        # Ha nem találja a fájlt (NoSuchElementException: no such element), akkor a  terminálból a
+        # python -m pytest --alluredir=./allure_report paranccsal való futtatás megoldotta a problémát.
+        with open('test\profilkepek.txt', 'r', encoding='UTF-8') as profile_pictures_list:
             list_content = profile_pictures_list.read().split('\n')
         # print(len(list_content))
 
