@@ -11,8 +11,8 @@ login_dict = {
 }
 
 new_test_data_dict = {
-    'title': 'Márai Sándor idézet',
-    'resume': 'Márai az olvasásról',
+    'title': 'Márai az olvasásról',
+    'resume': 'Márai Sándor idézet',
     'content': '"Nem elég katalógus, divat vagy hagyomány szerint olvasni. Ösztön szerint kell megkeresni a '
                'könyvet, mely nekünk, személyesen mondhat valamit. Rendszeresen kell olvasni, úgy, '
                'ahogy alszik, étkezik, ahogy szeret és lélegzik az ember." ',

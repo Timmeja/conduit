@@ -249,7 +249,7 @@ class TestConduit(object):
             time.sleep(2)
             # Ha nem találja a fájlt (NoSuchElementException: no such element), akkor a  terminálból a
             # python -m pytest --alluredir=./allure_report paranccsal való futtatás megoldotta a problémát.
-            with open('test/az_olvasasrol.txt', 'r', encoding='UTF-8') as article_content_file:
+            with open('test_conduit/az_olvasasrol.txt', 'r', encoding='UTF-8') as article_content_file:
                 article_content_string = article_content_file.read()
             time.sleep(2)
             article_content = WebDriverWait(self.browser, 5).until(
@@ -280,6 +280,7 @@ class TestConduit(object):
         for i in range(len(article_list)):
             article_link = article_list[i].get_attribute('href')
             self.browser.execute_script('window.open()')
+            time.sleep(2)
             main_tab = self.browser.window_handles[0]
             new_tab = self.browser.window_handles[1]
             self.browser.switch_to.window(new_tab)
@@ -337,7 +338,7 @@ class TestConduit(object):
         # Külső txt fájl beolvasása.
         # Ha nem találja a fájlt (NoSuchElementException: no such element), akkor a  terminálból a
         # python -m pytest --alluredir=./allure_report paranccsal való futtatás megoldotta a problémát.
-        with open('test\profilkepek.txt', 'r', encoding='UTF-8') as profile_pictures_list:
+        with open('test_conduit/profilkepek.txt', 'r', encoding='UTF-8') as profile_pictures_list:
             list_content = profile_pictures_list.read().split('\n')
         # print(len(list_content))
 
