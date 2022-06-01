@@ -17,7 +17,7 @@ class TestConduit(object):
         browser_options = Options()
         browser_options.headless = True
         self.browser = webdriver.Chrome(ChromeDriverManager().install(), options=browser_options)
-        self.browser.implicitly_wait(10)
+        # self.browser.implicitly_wait(10)
         URL = 'http://localhost:1667/#/'
         self.browser.get(URL)
         self.browser.maximize_window()
@@ -293,6 +293,7 @@ class TestConduit(object):
             comment_input.send_keys('Like!')
             post_comment_btn = self.browser.find_element_by_xpath('//button[@class="btn btn-sm btn-primary"]')
             post_comment_btn.click()
+            time.sleep(1)
             comment_delete = WebDriverWait(self.browser, 5).until(
                 EC.presence_of_element_located(
                     (By.XPATH, '//i[@class="ion-trash-a"]')))
