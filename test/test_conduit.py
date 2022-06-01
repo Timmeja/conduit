@@ -17,7 +17,7 @@ class TestConduit(object):
         browser_options = Options()
         browser_options.headless = True
         self.browser = webdriver.Chrome(ChromeDriverManager().install(), options=browser_options)
-        # self.browser.implicitly_wait(10)
+        self.browser.implicitly_wait(10)
         URL = 'http://localhost:1667/#/'
         self.browser.get(URL)
         self.browser.maximize_window()
@@ -321,7 +321,7 @@ class TestConduit(object):
             # addig folytatódik a kommentek törlése.
             while len(comment_delete) != 0:
                 comment_delete[0].click()
-                time.sleep(1)
+                time.sleep(2)
                 comment_delete = self.browser.find_elements_by_xpath('//i[@class="ion-trash-a"]')
 
             # Az asszert alapján, ha a megjelenő komment törlés ikonok száma 0, akkor az összes kommentet töröltem.
@@ -339,6 +339,7 @@ class TestConduit(object):
     def test_data_input_from_file(self):
         cookie_accept(self.browser)
         login(self.browser)
+        # time.sleep(1)
         settings_link = self.browser.find_element_by_xpath('//a[@href="#/settings"]')
         settings_link.click()
         time.sleep(2)
