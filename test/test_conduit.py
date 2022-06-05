@@ -1,3 +1,4 @@
+# A futtatáshoz használt modulok.
 import time
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -22,7 +23,7 @@ class TestConduit(object):
         self.browser.get(URL)
         self.browser.maximize_window()
 
-    # Sütik elfogadásának tesztelése, elfogadás után elem eltűnésének asszertálása
+    # Sütik elfogadásának tesztelése, elfogadás után elem eltűnésének asszertálása.
     def test_cookie_accept(self):
         time.sleep(2)
         cookie_panel = WebDriverWait(self.browser, 5).until(
@@ -56,11 +57,11 @@ class TestConduit(object):
             except AssertionError:
                 print('Hiba')
             self.browser.back()
-        time.sleep(2)
+        # time.sleep(2)
         print('A lista bejárva!')
 
     # Regisztráció indítása tesztadatok nélkül. Input elemek bejárása TAB segítségével, regisztráció elküldése.
-    # Hibaüzenet megjelenésének asszertálása
+    # Hibaüzenet megjelenésének asszertálása.
     def test_empty_registration(self):
         cookie_accept(self.browser)
         registration_link = self.browser.find_element_by_xpath('//a[@href="#/register"]')
@@ -101,7 +102,7 @@ class TestConduit(object):
         reg_msg = WebDriverWait(self.browser, 5).until(
             EC.presence_of_element_located((By.XPATH, '//div[@class="swal-text"]'))).text
         print(reg_msg)
-        # A többszöri indításhoz if-else ágban lekezeltem a "Foglalt email" hibaüzenetet.
+        # A többszöri futtatáshoz if-else ágban kezeltem a "Foglalt email" hibaüzenetet.
         try:
             if reg_msg == 'Your registration was successful!':
                 print('A regisztráció sikeres')
@@ -166,7 +167,7 @@ class TestConduit(object):
         for i in active_page_article_list1:
             article_list.append(i.text)
         # print(article_list)
-        # Oldal lapozó kódom újrahasznosítása
+        # Oldal lapozó kód újrafelhasználása.
         paginator_list = WebDriverWait(self.browser, 5).until(
             EC.presence_of_all_elements_located(
                 (By.XPATH, '//a[@class="page-link"]')))
@@ -190,7 +191,7 @@ class TestConduit(object):
                 article_list_text.write(i)
                 article_list_text.write('\n')
 
-        # Tartalom összehasonlítása az asszertben. A kiírt fájlban egynás alatt jelenítettem meg a címeket,
+        # Tartalom összehasonlítása az asszertben. A kiírt fájlban egymás alatt jelenítettem meg a címeket,
         # így szükséges a strip() metódus a \n-ek levágásához.
         try:
             with open('../article_list.txt', 'r', encoding='UTF-8') as assert_file:
@@ -222,6 +223,7 @@ class TestConduit(object):
         article_tags.send_keys(new_test_data_dict['tag1'], Keys.ENTER, new_test_data_dict['tag2'])
         submit_btn = self.browser.find_element_by_xpath('//button[@type="submit"]')
         submit_btn.click()
+
         try:
             assert article_title_input.text in self.browser.current_url
             print('A cikk publikálva!')
@@ -230,7 +232,8 @@ class TestConduit(object):
 
     # Bejelentkezett felhasználó publikációjának módosítása. Ha a felhasználó még nem publikált cikket,
     # az nem módosítható, ezt egy if ággal kezeltem.
-    # Ha van saját cikke, abból az elsőt választottam ki módosításra. A tesztadatot txt fájlból olvastatom, majd töltöm fel az oldalra.
+    # Ha van saját cikke, abból az elsőt választottam ki módosításra.
+    # A tesztadatot txt fájlból olvastatom be, majd töltöm fel az oldalra.
     # A cikk tartalmának asszertálása azonos formátumra hozva azokat (replace metódus segítségével).
     def test_data_update(self):
         cookie_accept(self.browser)
@@ -251,8 +254,6 @@ class TestConduit(object):
             edit_btn = self.browser.find_element_by_xpath('//*[@id="app"]/div/div[1]/div/div/span/a/span')
             edit_btn.click()
             time.sleep(2)
-            # Ha nem találja a fájlt (NoSuchElementException: no such element), akkor a  terminálból a
-            # python -m pytest --alluredir=./allure_report paranccsal való futtatás megoldotta a problémát.
             with open('test/az_olvasasrol.txt', 'r', encoding='UTF-8') as article_content_file:
                 article_content_string = article_content_file.read()
             time.sleep(2)
@@ -280,7 +281,8 @@ class TestConduit(object):
         login(self.browser)
         article_list = self.browser.find_elements_by_xpath('//a[@class="preview-link"]')
 
-        # Az összes cikk listázása után minden posztot egy új tabon megnyitva azok alatt egy-egy kommentet helyeztem el.
+        # Az összes cikk listázása után -minden posztot egy új tabon megnyitva- azok alatt
+        # egy-egy kommentet helyeztem el.
         for i in range(len(article_list)):
             article_link = article_list[i].get_attribute('href')
             self.browser.execute_script('window.open()')
@@ -297,7 +299,8 @@ class TestConduit(object):
             comment_delete = WebDriverWait(self.browser, 5).until(
                 EC.presence_of_element_located(
                     (By.XPATH, '//i[@class="ion-trash-a"]')))
-            # Assert segítségével ellenőriztem, hogy megjelent-e a komment törlése lehetőség, így bizonyítva, hogy a komment létrejött.
+            # Assert segítségével ellenőriztem, hogy megjelent-e a komment törlése lehetőség,
+            # így bizonyítva, hogy a komment létrejött.
             try:
                 assert comment_delete.is_displayed()
                 print(f'{i + 1}. komment rögzítve!')
@@ -306,7 +309,8 @@ class TestConduit(object):
             self.browser.close()
             self.browser.switch_to.window(main_tab)
 
-        # A cikklistán újra végigiterálva megkerestem az összes, a bejelentkezett felhasználó által írt kokmmenthez tartozó törlés ikont.
+        # A cikklistán újra végigiterálva megkerestem az összes, a bejelentkezett felhasználó által írt
+        # kommenthez tartozó törlés ikont.
         for i in range(len(article_list)):
             article_link = article_list[i].get_attribute('href')
             time.sleep(1)
@@ -324,7 +328,7 @@ class TestConduit(object):
                 time.sleep(2)
                 comment_delete = self.browser.find_elements_by_xpath('//i[@class="ion-trash-a"]')
 
-            # Az asszert alapján, ha a megjelenő komment törlés ikonok száma 0, akkor az összes kommentet töröltem.
+            # Az asszert alapján, ha a megjelenő komment törlés ikonok száma 0, akkor az összes kommentet törlődött.
             try:
                 assert len(comment_delete) == 0
                 print(f'{i + 1}. komment törölve!')
@@ -334,7 +338,7 @@ class TestConduit(object):
             self.browser.switch_to.window(main_tab)
             time.sleep(1)
 
-    # Többszörös, sorozatos adatbevitel fájlból bejelentkezett felhasználóval.
+    # Többszörös, sorozatos adatbevitel fájlból, bejelentkezett felhasználóval.
     # Profilkép lecserélése 10 alkalommal fájlban tárolt linkek alapján.
     def test_data_input_from_file(self):
         cookie_accept(self.browser)
@@ -344,13 +348,11 @@ class TestConduit(object):
         settings_link.click()
         time.sleep(2)
         # Külső txt fájl beolvasása.
-        # Ha nem találja a fájlt (NoSuchElementException: no such element), akkor a  terminálból a
-        # python -m pytest --alluredir=./allure_report paranccsal való futtatás megoldotta a problémát.
         with open('test/profilkepek.txt', 'r', encoding='UTF-8') as profile_pictures_list:
             list_content = profile_pictures_list.read().split('\n')
         # print(len(list_content))
 
-        # Profilkép inputmezejének azonosítása, előző adat törlése, új elérhetőség beolvasása fájlból az iterációban.
+        # Profilkép inputmezejének azonosítása, előző adat törlése, új képelérhetőség beolvasása fájlból az iterációban.
         # Mivel az elem folyamatosan jelen van, így a WebDriverWait-tel történő várakozás nem hatékony, szükséges a
         # time.sleep használata.
         for i in list_content:
