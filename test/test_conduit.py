@@ -11,7 +11,6 @@ from dict_list import *
 from selenium.webdriver.chrome.options import Options
 
 
-
 class TestConduit(object):
     # Böngésző definiálása, indítása, oldal megnyitása, ablakbeállítás. Implicit wait használata.
     def setup(self):
@@ -25,10 +24,6 @@ class TestConduit(object):
 
     # Sütik elfogadásának tesztelése, elfogadás után elem eltűnésének asszertálása.
     def test_cookie_accept(self):
-        time.sleep(2)
-        cookie_panel = WebDriverWait(self.browser, 5).until(
-            EC.presence_of_all_elements_located(
-                (By.XPATH, '//div[@class="cookie cookie__bar cookie__bar--bottom-left"]')))
         cookie_accept = self.browser.find_element_by_xpath(
             '//button[@class="cookie__bar__buttons__button cookie__bar__buttons__button--accept"]')
         cookie_accept.click()
@@ -46,8 +41,6 @@ class TestConduit(object):
         time.sleep(1)
         cookie_accept(self.browser)
         tag_list = self.browser.find_elements_by_xpath('//a[@class="tag-pill tag-default"]')
-        active_tag = self.browser.find_element_by_xpath('//a[@class="nav-link router-link-exact-active active"]')
-        active_link = self.browser.current_url
         for i in tag_list:
             i.click()
             active_link = self.browser.current_url
@@ -57,8 +50,6 @@ class TestConduit(object):
             except AssertionError:
                 print('Hiba')
             self.browser.back()
-        # time.sleep(2)
-        print('A lista bejárva!')
 
     # Regisztráció indítása tesztadatok nélkül. Input elemek bejárása TAB segítségével, regisztráció elküldése.
     # Hibaüzenet megjelenésének asszertálása.
@@ -95,13 +86,11 @@ class TestConduit(object):
         reg_email_input.send_keys(user_reg_dict['Email'])
         reg_password_input.send_keys(user_reg_dict['Password'])
         reg_btn.click()
-        print(user_reg_dict['Email'])
         # Szükséges a time.sleep használata, mert az üzenet szövege megváltozik a feltűnése után ("Now waiting..."),
         # és nekünk a végleges üzenet szövegére van szükségünk.
         time.sleep(2)
         reg_msg = WebDriverWait(self.browser, 5).until(
             EC.presence_of_element_located((By.XPATH, '//div[@class="swal-text"]'))).text
-        print(reg_msg)
         # A többszöri futtatáshoz if-else ágban kezeltem a "Foglalt email" hibaüzenetet.
         try:
             if reg_msg == 'Your registration was successful!':
@@ -130,8 +119,6 @@ class TestConduit(object):
         time.sleep(2)
         profile_links = WebDriverWait(self.browser, 5).until(
             EC.presence_of_all_elements_located((By.XPATH, '//li[@class="nav-item"]')))
-        print(len(homepage_links))
-        print(len(profile_links))
         try:
             assert len(profile_links) > len(homepage_links)
             print('A belépés sikeres!')
@@ -147,14 +134,12 @@ class TestConduit(object):
         for i in paginator_list:
             i.click()
             active_page = self.browser.find_element_by_xpath('//li[@class="page-item active"]')
-            print(i.text + '. oldal')
             try:
                 assert active_page.text in i.text
                 print('Érintett oldal')
             except AssertionError:
                 print('Hiba')
-        time.sleep(2)
-        print('Az oldalak bejárva!')
+        # time.sleep(2)
 
     # Adatmentés az oldalról bejelentkezett felhasználóként. Az adat itt a(z összes felhasználó által) publikált cikkek címének listája.
     def test_data_save(self):
@@ -166,7 +151,6 @@ class TestConduit(object):
                 (By.XPATH, '//a[@class="preview-link"]/h1')))
         for i in active_page_article_list1:
             article_list.append(i.text)
-        # print(article_list)
         # Oldal lapozó kód újrafelhasználása.
         paginator_list = WebDriverWait(self.browser, 5).until(
             EC.presence_of_all_elements_located(
@@ -174,9 +158,6 @@ class TestConduit(object):
 
         for i in paginator_list:
             i.click()
-            active_page = WebDriverWait(self.browser, 5).until(
-                EC.presence_of_all_elements_located(
-                    (By.XPATH, '//li[@class="page-item active"]')))
         time.sleep(2)
         active_page_article_list2 = WebDriverWait(self.browser, 5).until(
             EC.presence_of_all_elements_located(
@@ -184,9 +165,8 @@ class TestConduit(object):
         # Cikkek listába gyűjtése a meglevő 2 oldalról.
         for i in active_page_article_list2:
             article_list.append(i.text)
-        # print(article_list)
         # Cikklista kiírása egy külön fájlba.
-        with open('../article_list.txt', 'w', encoding='UTF-8') as article_list_text:
+        with open('test/article_list.txt', 'w', encoding='UTF-8') as article_list_text:
             for i in article_list:
                 article_list_text.write(i)
                 article_list_text.write('\n')
@@ -194,13 +174,11 @@ class TestConduit(object):
         # Tartalom összehasonlítása az asszertben. A kiírt fájlban egymás alatt jelenítettem meg a címeket,
         # így szükséges a strip() metódus a \n-ek levágásához.
         try:
-            with open('../article_list.txt', 'r', encoding='UTF-8') as assert_file:
+            with open('test/article_list.txt', 'r', encoding='UTF-8') as assert_file:
                 text_content = assert_file.readlines()
                 text_content_assert = []
                 for i in text_content:
                     text_content_assert.append(i.strip())
-                # print(text_content_assert)
-                # print(article_list)
             assert text_content_assert == article_list
             print('Az adatmentés sikeres!')
         except FileNotFoundError:
@@ -266,9 +244,6 @@ class TestConduit(object):
             submit_btn = self.browser.find_element_by_xpath('//button[@type="submit"]')
             submit_btn.click()
             new_article = self.browser.find_element_by_xpath('//div[@class="col-xs-12"]').text
-            # print(new_article)
-            # print(article_content_string.replace('\n', ' '))
-
             try:
                 assert new_article == article_content_string.replace('\n', ' ')
                 print('A cikk tartalma módosítva!')
@@ -343,37 +318,24 @@ class TestConduit(object):
     def test_data_input_from_file(self):
         cookie_accept(self.browser)
         login(self.browser)
-        # time.sleep(1)
         settings_link = self.browser.find_element_by_xpath('//a[@href="#/settings"]')
         settings_link.click()
         time.sleep(2)
         # Külső txt fájl beolvasása.
         with open('test/profilkepek.txt', 'r', encoding='UTF-8') as profile_pictures_list:
             list_content = profile_pictures_list.read().split('\n')
-        # print(len(list_content))
-
         # Profilkép inputmezejének azonosítása, előző adat törlése, új képelérhetőség beolvasása fájlból az iterációban.
         # Mivel az elem folyamatosan jelen van, így a WebDriverWait-tel történő várakozás nem hatékony, szükséges a
         # time.sleep használata.
         for i in list_content:
             profile_pic_input = self.browser.find_element_by_xpath('//input[@placeholder="URL of profile picture"]')
-            # profile_pic_input = WebDriverWait(self.browser, 5).until(
-            #     EC.presence_of_element_located(
-            #         (By.XPATH, '//input[@placeholder="URL of profile picture"]')))
             profile_pic_input.clear()
             profile_pic_input.send_keys(i)
-            # print(i)
             update_btn = self.browser.find_element_by_xpath('//button[@class="btn btn-lg btn-primary pull-xs-right"]')
-            # update_btn = WebDriverWait(self.browser, 5).until(
-            #     EC.presence_of_element_located(
-            #         (By.XPATH, '//button[@class="btn btn-lg btn-primary pull-xs-right"]')))
             update_btn.click()
             time.sleep(2)
             update_success_btn = self.browser.find_element_by_xpath(
                 '//button[@class="swal-button swal-button--confirm"]')
-            # update_success_btn = WebDriverWait(self.browser, 5).until(
-            #     EC.presence_of_element_located(
-            #         (By.XPATH, '//button[@class="swal-button swal-button--confirm"]')))
             update_success_btn.click()
             time.sleep(2)
             # Szükséges a felugró megerősítő ablakon kívül is ellenőrizni a profilkép változását,
@@ -383,10 +345,6 @@ class TestConduit(object):
             profile_link.click()
             time.sleep(2)
             user_img = self.browser.find_element_by_xpath('//img[@class="user-img"]').get_attribute('src')
-            # # user_img = WebDriverWait(self.browser, 5).until(
-            #     EC.presence_of_element_located(
-            #         (By.XPATH, '//img[@class="user-img"]'))).get_attribute('src')
-
             # A fájlból betöltött linkek és a megváltozott képek src-je összehasonlítható ellenőrzés céljából.
             try:
                 assert i == user_img
@@ -394,7 +352,7 @@ class TestConduit(object):
             except AssertionError:
                 print('A kép nem változott!')
             self.browser.back()
-            time.sleep(2)
+            # time.sleep(2)
 
     # Belejentkezett felhasználó kijelentkezése
     def test_logout(self):
@@ -405,7 +363,6 @@ class TestConduit(object):
         logout_link.click()
         time.sleep(2)
         login_link = self.browser.find_element_by_xpath('//a[@href="#/login"]')
-
         # Ha újra feltűnik a bejelentkezés link, a kijelentkezés sikeres volt.
         try:
             assert login_link.is_displayed()
