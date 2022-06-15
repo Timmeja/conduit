@@ -191,6 +191,7 @@ class TestConduit(object):
         login(self.browser)
         new_article_link = self.browser.find_element_by_xpath('//a[@href="#/editor"]')
         new_article_link.click()
+        time.sleep(2)
         article_title_input = self.browser.find_elements_by_xpath('//input[@type="text"]')[0]
         article_title_input.send_keys(new_test_data_dict['title'])
         article_resume = self.browser.find_elements_by_xpath('//input[@type="text"]')[1]
