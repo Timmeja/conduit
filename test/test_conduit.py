@@ -250,7 +250,7 @@ class TestConduit(object):
             except AssertionError:
                 print('Hiba a módosításkor!')
 
-    # Tesztadatok felvitele a komment szekcióba, majd az összes felvitt kommnet törlése.
+    # Tesztadatok felvitele a komment szekcióba, majd az összes felvitt komment törlése.
     def test_data_fill_and_delete(self):
         cookie_accept(self.browser)
         login(self.browser)
