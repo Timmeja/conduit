@@ -1,2 +1,0 @@
-
-Teljesült az elvárt eredmény: az adatok nélküli regisztráció elbukik!
