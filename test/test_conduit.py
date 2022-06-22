@@ -27,13 +27,9 @@ class TestConduit(object):
         cookie_accept = self.browser.find_element_by_xpath(
             '//button[@class="cookie__bar__buttons__button cookie__bar__buttons__button--accept"]')
         cookie_accept.click()
-        try:
-            cookie_panel = self.browser.find_elements_by_xpath(
-                '//div[@class="cookie cookie__bar cookie__bar--bottom-left"]')
-            assert len(cookie_panel) == 0
-            print('Adatkezelési tájékoztató elfogadva!')
-        except AssertionError:
-            print('Hiba történt!')
+        cookie_panel = self.browser.find_elements_by_xpath(
+            '//div[@class="cookie cookie__bar cookie__bar--bottom-left"]')
+        assert len(cookie_panel) == 0
 
     # Címkék listájának bejárása nem regisztrált felhasználóval (nem láthatja a cikkeket).
     # Címke megjelenésének asszertálása az aktuális url-ben.
@@ -44,11 +40,7 @@ class TestConduit(object):
         for i in tag_list:
             i.click()
             active_link = self.browser.current_url
-            try:
-                assert i.text.strip() in active_link
-                print(f'A/Az {i.text} listaelem érintve')
-            except AssertionError:
-                print('Hiba')
+            assert i.text.strip() in active_link
             self.browser.back()
 
     # Regisztráció indítása tesztadatok nélkül. Input elemek bejárása TAB segítségével, regisztráció elküldése.
@@ -69,7 +61,6 @@ class TestConduit(object):
         reg_failed_message = WebDriverWait(self.browser, 5).until(
             EC.presence_of_element_located((By.XPATH, '//div[@class="swal-icon swal-icon--error"]')))
         assert reg_failed_message.is_displayed()
-        print('Teljesült az elvárt eredmény: az adatok nélküli regisztráció elbukik!')
         reg_failed_btn = self.browser.find_element_by_xpath('//button[@class="swal-button swal-button--confirm"]')
         reg_failed_btn.click()
 
@@ -92,14 +83,11 @@ class TestConduit(object):
         reg_msg = WebDriverWait(self.browser, 5).until(
             EC.presence_of_element_located((By.XPATH, '//div[@class="swal-text"]'))).text
         # A többszöri futtatáshoz if-else ágban kezeltem a "Foglalt email" hibaüzenetet.
-        try:
-            if reg_msg == 'Your registration was successful!':
-                print('A regisztráció sikeres')
-            elif reg_msg == 'Email already taken.':
-                print(
-                    'Az email címet már regisztráltuk, megkezdheti a bejelentkezési folyamatot a megadott tesztadatokkal!')
-        except AssertionError:
-            print('Hiba a regisztráció során')
+        if reg_msg == 'Your registration was successful!':
+            print('A regisztráció sikeres')
+        elif reg_msg == 'Email already taken.':
+            print(
+                'Az email címet már regisztráltuk, megkezdheti a bejelentkezési folyamatot a megadott tesztadatokkal!')
 
     # Bejelentkezés előre regisztrált felhasználóval.
     # A főoldal és a bejelentkezés utáni főoldal menüpontmennyiségének asszertálása.
@@ -119,11 +107,7 @@ class TestConduit(object):
         time.sleep(2)
         profile_links = WebDriverWait(self.browser, 5).until(
             EC.presence_of_all_elements_located((By.XPATH, '//li[@class="nav-item"]')))
-        try:
-            assert len(profile_links) > len(homepage_links)
-            print('A belépés sikeres!')
-        except AssertionError:
-            print('A belépés sikertelen!')
+        assert len(profile_links) > len(homepage_links)
 
     # Oldalak bejárása bejelentkezett felhasználó esetén. Ellenőrzés az érintett lapozó oldalszáma alapján.
     def test_page_list_going_over(self):
@@ -134,12 +118,7 @@ class TestConduit(object):
         for i in paginator_list:
             i.click()
             active_page = self.browser.find_element_by_xpath('//li[@class="page-item active"]')
-            try:
-                assert active_page.text in i.text
-                print('Érintett oldal')
-            except AssertionError:
-                print('Hiba')
-        # time.sleep(2)
+            assert active_page.text in i.text
 
     # Adatmentés az oldalról bejelentkezett felhasználóként. Az adat itt a(z összes felhasználó által) publikált cikkek címének listája.
     def test_data_save(self):
@@ -173,16 +152,12 @@ class TestConduit(object):
 
         # Tartalom összehasonlítása az asszertben. A kiírt fájlban egymás alatt jelenítettem meg a címeket,
         # így szükséges a strip() metódus a \n-ek levágásához.
-        try:
-            with open('test/article_list.txt', 'r', encoding='UTF-8') as assert_file:
-                text_content = assert_file.readlines()
-                text_content_assert = []
-                for i in text_content:
-                    text_content_assert.append(i.strip())
-            assert text_content_assert == article_list
-            print('Az adatmentés sikeres!')
-        except FileNotFoundError:
-            print('Az adatmentés sikertelen volt!')
+        with open('test/article_list.txt', 'r', encoding='UTF-8') as assert_file:
+            text_content = assert_file.readlines()
+            text_content_assert = []
+            for i in text_content:
+                text_content_assert.append(i.strip())
+        assert text_content_assert == article_list
 
     # Új blogposzt felvitele bejelentkezett felhasználóval. Mezők azonosítása, tesztadatok beküldése dictionary felhasználásával.
     # A publikálás megtörténtének ellenőrzése az így keletkező url címmel.
@@ -202,12 +177,7 @@ class TestConduit(object):
         article_tags.send_keys(new_test_data_dict['tag1'], Keys.ENTER, new_test_data_dict['tag2'])
         submit_btn = self.browser.find_element_by_xpath('//button[@type="submit"]')
         submit_btn.click()
-
-        try:
-            assert article_title_input.text in self.browser.current_url
-            print('A cikk publikálva!')
-        except AssertionError:
-            print('Hiba a publikálás közben!')
+        assert article_title_input.text in self.browser.current_url
 
     # Bejelentkezett felhasználó publikációjának módosítása. Ha a felhasználó még nem publikált cikket,
     # az nem módosítható, ezt egy if ággal kezeltem.
@@ -245,11 +215,7 @@ class TestConduit(object):
             submit_btn = self.browser.find_element_by_xpath('//button[@type="submit"]')
             submit_btn.click()
             new_article = self.browser.find_element_by_xpath('//div[@class="col-xs-12"]').text
-            try:
-                assert new_article == article_content_string.replace('\n', ' ')
-                print('A cikk tartalma módosítva!')
-            except AssertionError:
-                print('Hiba a módosításkor!')
+            assert new_article == article_content_string.replace('\n', ' ')
 
     # Tesztadatok felvitele a komment szekcióba, majd az összes felvitt komment törlése.
     def test_data_fill_and_delete(self):
@@ -277,11 +243,7 @@ class TestConduit(object):
                     (By.XPATH, '//i[@class="ion-trash-a"]')))
             # Assert segítségével ellenőriztem, hogy megjelent-e a komment törlése lehetőség,
             # így bizonyítva, hogy a komment létrejött.
-            try:
-                assert comment_delete.is_displayed()
-                print(f'{i + 1}. komment rögzítve!')
-            except AssertionError:
-                print(f'Hiba a/az {i + 1}. komment rögzítése közben!')
+            assert comment_delete.is_displayed()
             self.browser.close()
             self.browser.switch_to.window(main_tab)
 
@@ -305,11 +267,7 @@ class TestConduit(object):
                 comment_delete = self.browser.find_elements_by_xpath('//i[@class="ion-trash-a"]')
 
             # Az asszert alapján, ha a megjelenő komment törlés ikonok száma 0, akkor az összes kommentet törlődött.
-            try:
-                assert len(comment_delete) == 0
-                print(f'{i + 1}. komment törölve!')
-            except AssertionError:
-                print(f'Hiba a/az {i + 1}. komment törlése közben!')
+            assert len(comment_delete) == 0
             self.browser.close()
             self.browser.switch_to.window(main_tab)
             time.sleep(1)
@@ -347,13 +305,8 @@ class TestConduit(object):
             time.sleep(2)
             user_img = self.browser.find_element_by_xpath('//img[@class="user-img"]').get_attribute('src')
             # A fájlból betöltött linkek és a megváltozott képek src-je összehasonlítható ellenőrzés céljából.
-            try:
-                assert i == user_img
-                print('A kép megváltozott!')
-            except AssertionError:
-                print('A kép nem változott!')
+            assert i == user_img
             self.browser.back()
-            # time.sleep(2)
 
     # Belejentkezett felhasználó kijelentkezése
     def test_logout(self):
@@ -365,11 +318,7 @@ class TestConduit(object):
         time.sleep(2)
         login_link = self.browser.find_element_by_xpath('//a[@href="#/login"]')
         # Ha újra feltűnik a bejelentkezés link, a kijelentkezés sikeres volt.
-        try:
-            assert login_link.is_displayed()
-            print('A kijelentkezés sikeres!')
-        except AssertionError:
-            print('A kijelentkezés sikertelen!')
+        assert login_link.is_displayed()
 
     def teardown(self):
         self.browser.quit()
